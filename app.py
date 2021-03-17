@@ -17,7 +17,8 @@ twitter = oauth.remote_app('twitter',
         access_token='https://api.twitter.com/aouth/access_token',
         authorize_url='https://api.twitter.com/oauth/authenticate',
         consumer_key=config.CONSUMER_KEY,
-        consumer_secret=config.CONSUMER_SECRET)
+        consumer_secret=config.CONSUMER_SECRET,
+        access_token_method = 'GET')
 
 @twitter.tokengetter
 def get_twitter_token(token=None):
