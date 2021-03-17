@@ -14,7 +14,7 @@ twitter_blueprint = make_twitter_blueprint(
     api_key=config.CONSUMER_KEY,
     api_secret=config.CONSUMER_SECRET
 )
-app.register_blueprint(twitter_blueprint)
+app.register_blueprint(twitter_blueprint, url_prefix='/twitter_login')
 # oauth = OAuth()
 
 # twitter = oauth.remote_app('twitter',
@@ -34,7 +34,7 @@ app.register_blueprint(twitter_blueprint)
 @app.route('/')
 def index():
     if not twitter.authorized:
-        return redirect(url_for("twitter.login")) # How to handle this?
+        return redirect(url_for('twitter_login')) # How to handle this?
     resp = twitter.get("account/settings.json")
     assert resp.ok
     return {"screen_name",resp.json()["screen_name"]}
