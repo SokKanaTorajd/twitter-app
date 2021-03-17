@@ -9,6 +9,11 @@ DEBUG = True
 app = Flask(__name__)
 app.debug = DEBUG
 app.secret_key = SECRET_KEY
+
+twitter_blueprint = make_twitter_blueprint(
+    api_key=config.CONSUMER_KEY,
+    api_secret=config.CONSUMER_SECRET
+)
 app.register_blueprint(twitter_blueprint)
 # oauth = OAuth()
 
