@@ -1,6 +1,7 @@
 from flask import Flask, render_template, request, \
     url_for, redirect, session
 import tweepy
+impor json
 
 app = Flask(__name__)
 app.debug = False
@@ -75,7 +76,7 @@ def start():
 @app.route('/callback')
 def callback():
     # request_token = session['request_token']
-    verifier = request.GET.get('oauth_verifier')
+    verifier = request.json.get('oauth_verifier')
 
     auth = tweepy.OAuthHandler(
             config['APP_CONSUMER_KEY'],
