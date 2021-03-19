@@ -46,6 +46,7 @@ def start():
         print('Error! Failed to get request token.')
 
     session.set('request_token', auth.request_token['oauth_token'])
+    print('token acquired')
 
     return render_template('start.html', 
                             authorize_url=authorize_url, 
@@ -73,7 +74,7 @@ def start():
 
 @app.route('/callback')
 def callback():
-    request_token = session['request_token']
+    # request_token = session['request_token']
     verifier = request.GET.get('oauth_verifier')
 
     auth = tweepy.OAuthHandler(
