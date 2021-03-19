@@ -81,17 +81,24 @@ def callback():
     # session.set('request_token', auth.request_token['oauth_token'])
     # request_token = session['request_token']
         verifier = request.args.get('oauth_verifier')
+        print('verifier {}'.format(verifier))
         auth = tweepy.OAuthHandler(
                 app.config['APP_CONSUMER_KEY'],
                 app.config['APP_CONSUMER_SECRET'])
         token = session.get('request_token')
+        print('token: {}'.format(token))
         # session.delete('request_token')
         auth.request_token = {
             'oauth_token': token,
             'oauth_token_secret': verifier}
+        print('authorized = {}'.format(auth.request_token))
         try:
             auth.get_access_token(verifier)
-            api = tweepy.API(auth)
+            print('Token is Authorized!')
+        except tweepy.TweepError:
+            print('Error! failed to access token')
+        
+        api = tweepy.API(auth)
             user_verified = api.verify_credentials()
             if user_verified:
                 screen_name = user_verified.screen_name
@@ -109,8 +116,6 @@ def callback():
                                         statuses_count=statuses_count, 
                                         followers_count=followers_count, 
                                         access_token_url=access_token_url)
-        except tweepy.TweepError:
-            print('Error! failed to access token')
 
 
     # # Accept the callback params, get the token and call the API to
