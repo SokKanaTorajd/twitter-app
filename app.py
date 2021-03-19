@@ -80,7 +80,7 @@ def callback():
     
     # session.set('request_token', auth.request_token['oauth_token'])
     # request_token = session['request_token']
-
+    verifier = request.GET.get('oauth_verifier')
     auth = tweepy.OAuthHandler(
             app.config['APP_CONSUMER_KEY'],
             app.config['APP_CONSUMER_SECRET'])
