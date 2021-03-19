@@ -85,7 +85,7 @@ def callback():
             app.config['APP_CONSUMER_KEY'],
             app.config['APP_CONSUMER_SECRET'])
     token = session.get('request_token')
-    session.delete('request_token')
+    # session.delete('request_token')
     auth.request_token = {
         'oauth_token': token,
         'oauth_token_secret': verifier}
