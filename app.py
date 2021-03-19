@@ -75,42 +75,42 @@ def start():
     # return render_template('start.html', authorize_url=authorize_url, oauth_token=oauth_token, request_token_url=request_token_url)
 
 
-@app.route('/callback')
+@app.route('/callback', methods=['GET'])
 def callback():
-    
+    if request.method == 'GET':
     # session.set('request_token', auth.request_token['oauth_token'])
     # request_token = session['request_token']
-    verifier = request.args.get('oauth_verifier')
-    auth = tweepy.OAuthHandler(
-            app.config['APP_CONSUMER_KEY'],
-            app.config['APP_CONSUMER_SECRET'])
-    token = session.get('request_token')
-    # session.delete('request_token')
-    auth.request_token = {
-        'oauth_token': token,
-        'oauth_token_secret': verifier}
-    try:
-        auth.get_access_token(verifier)
-        api = tweepy.API(auth)
-        user_verified = api.verify_credentials()
-        if user_verified:
-            screen_name = user_verified.screen_name
-            user_id = user_verified.id_str
-            name = user_verified.name
-            friends_count = user_verified.friends_count
-            statuses_count = user_verified.statuses_count
-            followers_count = user_verified.followers_count
+        verifier = request.args.get('oauth_verifier')
+        auth = tweepy.OAuthHandler(
+                app.config['APP_CONSUMER_KEY'],
+                app.config['APP_CONSUMER_SECRET'])
+        token = session.get('request_token')
+        # session.delete('request_token')
+        auth.request_token = {
+            'oauth_token': token,
+            'oauth_token_secret': verifier}
+        try:
+            auth.get_access_token(verifier)
+            api = tweepy.API(auth)
+            user_verified = api.verify_credentials()
+            if user_verified:
+                screen_name = user_verified.screen_name
+                user_id = user_verified.id_str
+                name = user_verified.name
+                friends_count = user_verified.friends_count
+                statuses_count = user_verified.statuses_count
+                followers_count = user_verified.followers_count
 
 
-            return render_template('callback-success.html', 
-                                    screen_name=screen_name, 
-                                    user_id=user_id, name=name,
-                                    friends_count=friends_count, 
-                                    statuses_count=statuses_count, 
-                                    followers_count=followers_count, 
-                                    access_token_url=access_token_url)
-    except tweepy.TweepError:
-        print('Error! failed to access token')
+                return render_template('callback-success.html', 
+                                        screen_name=screen_name, 
+                                        user_id=user_id, name=name,
+                                        friends_count=friends_count, 
+                                        statuses_count=statuses_count, 
+                                        followers_count=followers_count, 
+                                        access_token_url=access_token_url)
+        except tweepy.TweepError:
+            print('Error! failed to access token')
 
 
     # # Accept the callback params, get the token and call the API to
