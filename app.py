@@ -82,8 +82,8 @@ def callback():
     # request_token = session['request_token']
 
     auth = tweepy.OAuthHandler(
-            config['APP_CONSUMER_KEY'],
-            config['APP_CONSUMER_SECRET'])
+            app.config['APP_CONSUMER_KEY'],
+            app.config['APP_CONSUMER_SECRET'])
     token = session.get('request_token')
     session.delete('request_token')
     auth.request_token = {
