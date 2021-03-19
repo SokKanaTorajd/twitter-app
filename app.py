@@ -99,23 +99,23 @@ def callback():
             print('Error! failed to access token')
         
         api = tweepy.API(auth)
-            user_verified = api.verify_credentials()
-            if user_verified:
-                screen_name = user_verified.screen_name
-                user_id = user_verified.id_str
-                name = user_verified.name
-                friends_count = user_verified.friends_count
-                statuses_count = user_verified.statuses_count
-                followers_count = user_verified.followers_count
+        user_verified = api.verify_credentials()
+        if user_verified:
+            screen_name = user_verified.screen_name
+            user_id = user_verified.id_str
+            name = user_verified.name
+            friends_count = user_verified.friends_count
+            statuses_count = user_verified.statuses_count
+            followers_count = user_verified.followers_count
 
 
-                return render_template('callback-success.html', 
-                                        screen_name=screen_name, 
-                                        user_id=user_id, name=name,
-                                        friends_count=friends_count, 
-                                        statuses_count=statuses_count, 
-                                        followers_count=followers_count, 
-                                        access_token_url=access_token_url)
+            return render_template('callback-success.html', 
+                                    screen_name=screen_name, 
+                                    user_id=user_id, name=name,
+                                    friends_count=friends_count, 
+                                    statuses_count=statuses_count, 
+                                    followers_count=followers_count, 
+                                    access_token_url=access_token_url)
 
 
     # # Accept the callback params, get the token and call the API to
