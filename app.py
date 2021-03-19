@@ -1,7 +1,7 @@
 from flask import Flask, render_template, request, \
     url_for, redirect, session
 import tweepy
-impor json
+import json
 
 app = Flask(__name__)
 app.debug = False
