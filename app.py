@@ -41,7 +41,7 @@ def start():
                     app.config['APP_CONSUMER_SECRET'], 
                     callback_url)
     try:
-        session.set('request_token', auth.request_token['oauth_token'])
+        # session.set('request_token', auth.request_token['oauth_token'])
         url = auth.get_authorization_url()
         print(url)
         # session.set('request_token', auth.request_token['oauth_token'])
@@ -81,21 +81,22 @@ def callback():
     if request.method == 'GET':
         # session.set('request_token', auth.request_token['oauth_token'])
     # request_token = session['request_token']
-        verifier = request.args.get('oauth_verifier')
-        print('verifier {}'.format(verifier))
+        # verifier = request.args.get('oauth_verifier')
+        # print('verifier {}'.format(verifier))
         auth = tweepy.OAuthHandler(
                 app.config['APP_CONSUMER_KEY'],
                 app.config['APP_CONSUMER_SECRET'])
-        token = session.get('oauth_token')
-        print('token', token)
-        print('request_token: {}'.format(auth.request_token['oauth_token']))
+        # token = session.get('oauth_token')
+        # print('token', token)
+        # print('request_token: {}'.format(auth.request_token['oauth_token']))
         # session.delete('request_token')
         auth.request_token = {
-            'oauth_token': token,
-            'oauth_token_secret': verifier}
-        print('authorized = {}'.format(auth.request_token))
+            'oauth_token': request.args.get('oauth_token'),
+            'oauth_token_secret': request.args.get('oauth_verifier')}
+        # print('authorized = {}'.format(auth.request_token))
+
         try:
-            auth.get_access_token(verifier)
+            auth.get_access_token(request.args.get('oauth_verifier'))
             print('Token is Authorized!')
         except tweepy.TweepError:
             print('Error! failed to access token')
