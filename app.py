@@ -41,6 +41,7 @@ def start():
                     app.config['APP_CONSUMER_SECRET'], 
                     callback_url)
     try:
+        session.set('request_token', auth.request_token['oauth_token'])
         url = auth.get_authorization_url()
         print(url)
         # session.set('request_token', auth.request_token['oauth_token'])
@@ -78,7 +79,7 @@ def start():
 @app.route('/callback', methods=['GET'])
 def callback():
     if request.method == 'GET':
-        session.set('request_token', auth.request_token['oauth_token'])
+        # session.set('request_token', auth.request_token['oauth_token'])
     # request_token = session['request_token']
         verifier = request.args.get('oauth_verifier')
         print('verifier {}'.format(verifier))
