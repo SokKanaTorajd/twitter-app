@@ -78,14 +78,14 @@ def start():
 @app.route('/callback')
 def callback():
     
-    session.set('request_token', auth.request_token['oauth_token'])
-    request_token = session['request_token']
-    verifier = request.GET.get('oauth_verifier')
+    # session.set('request_token', auth.request_token['oauth_token'])
+    # request_token = session['request_token']
 
     auth = tweepy.OAuthHandler(
             config['APP_CONSUMER_KEY'],
             config['APP_CONSUMER_SECRET'])
     token = session.get('request_token')
+    session.delete('request_token')
     auth.request_token = {
         'oauth_token': token,
         'oauth_token_secret': verifier}
