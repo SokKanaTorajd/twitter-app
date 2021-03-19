@@ -42,6 +42,7 @@ def start():
                     callback_url)
     try:
         url = auth.get_authorization_url()
+        print(url)
         session.set('request_token', auth.request_token['oauth_token'])
         print('token acquired')
         return redirect(url)
@@ -50,10 +51,10 @@ def start():
 
     
 
-    return render_template('start.html', 
-                            authorize_url=authorize_url, 
-                            oauth_token=auth.request_token['oauth_token'], 
-                            request_token_url=request_token_url)
+    # return render_template('start.html', 
+    #                         authorize_url=authorize_url, 
+    #                         oauth_token=auth.request_token['oauth_token'], 
+    #                         request_token_url=request_token_url)
 
     # consumer = oauth.Consumer(
     #     app.config['APP_CONSUMER_KEY'], app.config['APP_CONSUMER_SECRET'])
