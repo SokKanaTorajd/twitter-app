@@ -43,8 +43,8 @@ def start():
     try:
         url = auth.get_authorization_url()
         print(url)
-        session.set('request_token', auth.request_token['oauth_token'])
-        print('token acquired')
+        # session.set('request_token', auth.request_token['oauth_token'])
+        # print('token acquired')
         return redirect(url)
     except tweepy.TweepError:
         print('Error! Failed to get request token.')
