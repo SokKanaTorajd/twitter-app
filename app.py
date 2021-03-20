@@ -52,6 +52,8 @@ def callback():
         except tweepy.TweepError as e:
             error_message = 'Invalid response, {message}'.format(message=e)
             return render_template('error.html', error_message=error_message)
+
+        auth.set_access_token(auth.access_token, auth.access_token_secret)
         
         api = tweepy.API(auth)
         user_verified = api.verify_credentials()
@@ -84,11 +86,11 @@ def callback():
 def post_tweet():
 
     if request.method == 'POST':
-        user_access = db.getUserAccess()
+        # user_access = db.getUserAccess(id)
         auth = tweepy.OAuthHandler(
                 app.config['APP_CONSUMER_KEY'],
                 app.config['APP_CONSUMER_SECRET'])
-        auth.set_access_token(user_access['token'], user_access['token_secret'])
+        # auth.set_access_token(user_access['token'], user_access['token_secret'])
         api = tweepy.API(auth)
         text = request.form['tweet']
         api.update_status(text)
