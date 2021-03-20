@@ -16,7 +16,7 @@ class DB(object):
     def getUserAccess(self, id):
         db = self.client[self.database]
         collection = "twitter-app"
-        result = db[collection].find_one('user_id': id)
+        result = db[collection].find_one({'user_id': id})
         return result['access']
 
     def insertTweet(self, data):
