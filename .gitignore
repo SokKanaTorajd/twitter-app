@@ -1,6 +1,6 @@
 # Python
 .env
-__pycache_/
+__pycache__/
 
 # Visual Studio Code
 .vscode
