@@ -71,7 +71,7 @@ def callback():
                 'friends_count' : user_verified.friends_count,
                 'followers_count' : user_verified.followers_count,
                 'favorites_count': user_verified.favourites_count,
-                'profile_image' : user_verified.user.profile_image_url}
+                'profile_image' : user_verified.profile_image_url}
             
             data = {
                 'access': tokens,
