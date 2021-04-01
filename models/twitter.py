@@ -1,13 +1,11 @@
 import tweepy
 import requests
 
-app.config.from_pyfile('config.cfg', silent=True)
-
 class KecilinTwitter():
 
     def __init__(self):
-        self.consumer_key = app.config['APP_CONSUMER_KEY']
-        self.consumer_secret = app.config['APP_CONSUMER_SECRET']
+        self.consumer_key = 'qWS5juc0D6N9tHGl7uyVxHTRQ'
+        self.consumer_secret = 'vnyyMCnLiDHAg6qrCQUIMNimuqHR9KBINmq8zFqZSp1ni51CVJ'
 
     def set_oauth(self):
         auth = tweepy.OAuthHandler(self.consumer_key, self.consumer_secret)
