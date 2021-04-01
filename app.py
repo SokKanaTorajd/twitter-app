@@ -1,5 +1,7 @@
 from flask import Flask, flash, render_template, request, \
     url_for, redirect, jsonify
+from models.twitter import KecilinTwitter
+
 # from database.db import DB
 # from flask_restplus import Api, Resource, fields
 import tweepy
@@ -55,26 +57,35 @@ show_user_url = 'https://api.twitter.com/1.1/users/show.json'
 app.config.from_pyfile('config.cfg', silent=True)
 
 # db = DB()
-
+twit = KecilinTwitter()
 
 @app.route('/')
 def hello():
     return render_template('index.html')
 
 
-@app.route('/start')
+@app.route('/start', methods=['POST'])
 def start():
-    callback_url = 'https://kecilin-twitter.herokuapp.com/callback'
-    auth = tweepy.OAuthHandler(
-                    app.config['APP_CONSUMER_KEY'], 
-                    app.config['APP_CONSUMER_SECRET'], 
-                    callback_url)
-    try:
-        url = auth.get_authorization_url()
-        print(url)
-        return redirect(url)
-    except tweepy.TweepError:
-        print('Error! Failed to get request token.')
+    if request.method =='POST':
+        access_token = request.form['access_token']
+        access_token_secret = request.form['access_token_secret']
+        user_info = twit.get_user_info(access_token, access_token_secret)
+        
+        return jsonify(user_info)
+        
+    else:
+        callback_url = 'https://kecilin-twitter.herokuapp.com/callback'
+        auth = tweepy.OAuthHandler(
+                        app.config['APP_CONSUMER_KEY'], 
+                        app.config['APP_CONSUMER_SECRET'], 
+                        callback_url)
+        try:
+            url = auth.get_authorization_url()
+            print(url)
+            return redirect(url)
+        except tweepy.TweepError:
+            print('Error! Failed to get request token.')
+
 
 
 @app.route('/callback', methods=['GET'])
