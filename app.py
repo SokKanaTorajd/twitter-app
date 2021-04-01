@@ -1,51 +1,51 @@
 from flask import Flask, flash, render_template, request, \
     url_for, redirect, jsonify
 # from database.db import DB
-from flask_restplus import Api, Resource, fields
+# from flask_restplus import Api, Resource, fields
 import tweepy
 
 app = Flask(__name__)
 app.debug = False
-app_api = Api(app, version='1.0', title='Integrated Media - Twitter API',
-    description='Kecilin Integrated Media API v1.0')
+# app_api = Api(app, version='1.0', title='Integrated Media - Twitter API',
+#     description='Kecilin Integrated Media API v1.0')
 
-twitter_user = api.namespace('user', description='Socmed Twitter API')
-user_model = twitter_user.model('IMTwitter', {
-    'user_id' : fields.String(required=True, description='User id'),
-    'screen_name' : fields.String(required=True, description='Twitter Username'),
-    'name' : fields.String(required=True, description='Twitter name'),
-    'description' : fields.String(required=True, description='User bio description'),
-    'statuses_count' : fields.Integer(required=True, description='User Statuses Count'),
-    'friends_count' : fields.Integer(required=True, description='User Followings Count'),
-    'followers_count' : fields.Integer(required=True, description='User Followers Count'),
-    'favourites_count': fields.Integer(required=True, description='User Likes Count'),
-    'profile_image' : fields.String(required=True, description='User profile image link')
-}) 
+# twitter_user = api.namespace('user', description='Socmed Twitter API')
+# user_model = twitter_user.model('IMTwitter', {
+#     'user_id' : fields.String(required=True, description='User id'),
+#     'screen_name' : fields.String(required=True, description='Twitter Username'),
+#     'name' : fields.String(required=True, description='Twitter name'),
+#     'description' : fields.String(required=True, description='User bio description'),
+#     'statuses_count' : fields.Integer(required=True, description='User Statuses Count'),
+#     'friends_count' : fields.Integer(required=True, description='User Followings Count'),
+#     'followers_count' : fields.Integer(required=True, description='User Followers Count'),
+#     'favourites_count': fields.Integer(required=True, description='User Likes Count'),
+#     'profile_image' : fields.String(required=True, description='User profile image link')
+# }) 
 
-users = [
-    {
-        'user_id': '1117409047261540353', 
-        'screen_name': 'radiputra49', 
-        'name': 'radiputra49', 
-        'description': 'Just for fun', 
-        'statuses_count': 14, 
-        'friends_count': 7, 
-        'followers_count': 0, 
-        'favourites_count': 3, 
-        'profile_image': 'http://abs.twimg.com/sticky/default_profile_images/default_profile_normal.png'
-    },
-    {
-        'user_id': '2880366295', 
-        'screen_name': 'devtorajd', 
-        'name': 'helios', 
-        'description': 
-        'Master of None - Jack of All Trades', 
-        'statuses_count': 5413, 
-        'friends_count': 235, 
-        'followers_count': 151, 
-        'favourites_count': 6599, 
-        'profile_image': 'http://pbs.twimg.com/profile_images/1377249145316990982/ECR_CkiK_normal.jpg'
-        }]
+# users = [
+#     {
+#         'user_id': '1117409047261540353', 
+#         'screen_name': 'radiputra49', 
+#         'name': 'radiputra49', 
+#         'description': 'Just for fun', 
+#         'statuses_count': 14, 
+#         'friends_count': 7, 
+#         'followers_count': 0, 
+#         'favourites_count': 3, 
+#         'profile_image': 'http://abs.twimg.com/sticky/default_profile_images/default_profile_normal.png'
+#     },
+#     {
+#         'user_id': '2880366295', 
+#         'screen_name': 'devtorajd', 
+#         'name': 'helios', 
+#         'description': 
+#         'Master of None - Jack of All Trades', 
+#         'statuses_count': 5413, 
+#         'friends_count': 235, 
+#         'followers_count': 151, 
+#         'favourites_count': 6599, 
+#         'profile_image': 'http://pbs.twimg.com/profile_images/1377249145316990982/ECR_CkiK_normal.jpg'
+#         }]
 
 request_token_url = 'https://api.twitter.com/oauth/request_token'
 access_token_url = 'https://api.twitter.com/oauth/access_token'
@@ -116,12 +116,12 @@ def callback():
 
         return jsoniy({"error": "access unauthorized"})
 
-@twitter_user.route('/user-twitter')
-class UserData(Resource):
-    @twitter_user.doc('get_user_model')
-    @twitter_user.marshal_with(user_model)
-    def get(self):
-        return users
+# @twitter_user.route('/user-twitter')
+# class UserData(Resource):
+#     @twitter_user.doc('get_user_model')
+#     @twitter_user.marshal_with(user_model)
+#     def get(self):
+#         return users
 
             # db.insertAuthorizedUser(data)
 
