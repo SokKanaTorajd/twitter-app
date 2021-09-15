@@ -64,7 +64,7 @@ def hello():
     return render_template('index.html')
 
 
-@app.route('/start', methods=['POST'])
+@app.route('/app2/start', methods=['POST'])
 def start():
     if request.method =='POST':
         access_token = request.form['access_token']
@@ -74,10 +74,10 @@ def start():
         return jsonify(user_info)
         
     else:
-        callback_url = 'https://kecilin-twitter.herokuapp.com/callback'
+        callback_url = 'https://kecilin-twitter.herokuapp.com/app2/callback'
         auth = tweepy.OAuthHandler(
-                        app.config['APP_CONSUMER_KEY'], 
-                        app.config['APP_CONSUMER_SECRET'], 
+                        app.config['tweetdecks2_consumer_key'], 
+                        app.config['tweetdecks2_consumer_secret'],  
                         callback_url)
         try:
             url = auth.get_authorization_url()
@@ -87,13 +87,75 @@ def start():
             print('Error! Failed to get request token.')
 
 
+@app.route('/app3/start', methods=['POST'])
+def start():
+    if request.method =='POST':
+        access_token = request.form['access_token']
+        access_token_secret = request.form['access_token_secret']
+        user_info = twit.get_user_info(access_token, access_token_secret)
+        
+        return jsonify(user_info)
+        
+    else:
+        callback_url = 'https://kecilin-twitter.herokuapp.com/app3/callback'
+        auth = tweepy.OAuthHandler(
+                        app.config['tweetdecks3_consumer_key'], 
+                        app.config['tweetdecks3_consumer_key'],  
+                        callback_url)
+        try:
+            url = auth.get_authorization_url()
+            print(url)
+            return redirect(url)
+        except tweepy.TweepError:
+            print('Error! Failed to get request token.')
 
-@app.route('/callback', methods=['GET'])
-def callback():
+
+# @app.route('/callback', methods=['GET'])
+# def callback():
+#     if request.method == 'GET':
+#         auth = tweepy.OAuthHandler(
+#                 app.config['APP_CONSUMER_KEY'],
+#                 app.config['APP_CONSUMER_SECRET'])
+
+#         auth.request_token = {
+#             'oauth_token': request.args.get('oauth_token'),
+#             'oauth_token_secret': request.args.get('oauth_verifier')}
+
+#         try:
+#             auth.get_access_token(request.args.get('oauth_verifier'))
+
+#         except tweepy.TweepError as e:
+#             error_message = 'Invalid response, {message}'.format(message=e)
+#             return render_template('error.html', error_message=error_message)
+
+#         auth.set_access_token(auth.access_token, auth.access_token_secret)
+#         api = tweepy.API(auth)
+#         user_verified = api.verify_credentials()
+
+#         if user_verified:
+
+#             user_info = {
+#                 'user_id' : user_verified.id_str,
+#                 'screen_name' : user_verified.screen_name,
+#                 'name' : user_verified.name,
+#                 'description' : user_verified.description,
+#                 'statuses_count' : user_verified.statuses_count,
+#                 'friends_count' : user_verified.friends_count,
+#                 'followers_count' : user_verified.followers_count,
+#                 'favourites_count': user_verified.favourites_count,
+#                 'profile_image' : user_verified.profile_image_url}
+
+#             return jsonify(user_info)
+
+#         return jsonify({"error": "access unauthorized"})
+
+
+@app.route('/app2/callback', methods=['GET'])
+def callback_app2():
     if request.method == 'GET':
         auth = tweepy.OAuthHandler(
-                app.config['APP_CONSUMER_KEY'],
-                app.config['APP_CONSUMER_SECRET'])
+                app.config['tweetdecks2_consumer_key'],
+                app.config['tweetdecks2_consumer_key'])
 
         auth.request_token = {
             'oauth_token': request.args.get('oauth_token'),
@@ -125,7 +187,48 @@ def callback():
 
             return jsonify(user_info)
 
-        return jsoniy({"error": "access unauthorized"})
+        return jsonify({"error": "access unauthorized"})
+
+
+@app.route('/app3/callback', methods=['GET'])
+def callback_app3():
+    if request.method == 'GET':
+        auth = tweepy.OAuthHandler(
+                app.config['tweetdecks2_consumer_key'],
+                app.config['tweetdecks2_consumer_key'])
+
+        auth.request_token = {
+            'oauth_token': request.args.get('oauth_token'),
+            'oauth_token_secret': request.args.get('oauth_verifier')}
+
+        try:
+            auth.get_access_token(request.args.get('oauth_verifier'))
+
+        except tweepy.TweepError as e:
+            error_message = 'Invalid response, {message}'.format(message=e)
+            return render_template('error.html', error_message=error_message)
+
+        auth.set_access_token(auth.access_token, auth.access_token_secret)
+        api = tweepy.API(auth)
+        user_verified = api.verify_credentials()
+
+        if user_verified:
+
+            user_info = {
+                'user_id' : user_verified.id_str,
+                'screen_name' : user_verified.screen_name,
+                'name' : user_verified.name,
+                'description' : user_verified.description,
+                'statuses_count' : user_verified.statuses_count,
+                'friends_count' : user_verified.friends_count,
+                'followers_count' : user_verified.followers_count,
+                'favourites_count': user_verified.favourites_count,
+                'profile_image' : user_verified.profile_image_url}
+
+            return jsonify(user_info)
+
+        return jsonify({"error": "access unauthorized"})
+
 
 # @twitter_user.route('/user-twitter')
 # class UserData(Resource):
