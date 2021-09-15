@@ -65,7 +65,7 @@ def hello():
 
 
 @app.route('/app2/start', methods=['POST'])
-def start():
+def start_app2():
     if request.method =='POST':
         access_token = request.form['access_token']
         access_token_secret = request.form['access_token_secret']
@@ -88,7 +88,7 @@ def start():
 
 
 @app.route('/app3/start', methods=['POST'])
-def start():
+def start_app3():
     if request.method =='POST':
         access_token = request.form['access_token']
         access_token_secret = request.form['access_token_secret']
