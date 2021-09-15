@@ -154,8 +154,8 @@ def start_app3():
 def callback_app2():
     if request.method == 'GET':
         auth = tweepy.OAuthHandler(
-                app.config['tweetdecks2_consumer_key'],
-                app.config['tweetdecks2_consumer_key'])
+                app.config['APP2_CONSUMER_KEY'],
+                app.config['APP2_CONSUMER_SECRET'])
 
         auth.request_token = {
             'oauth_token': request.args.get('oauth_token'),
@@ -194,8 +194,8 @@ def callback_app2():
 def callback_app3():
     if request.method == 'GET':
         auth = tweepy.OAuthHandler(
-                app.config['tweetdecks2_consumer_key'],
-                app.config['tweetdecks2_consumer_key'])
+                app.config['APP3_CONSUMER_KEY'],
+                app.config['APP3_CONSUMER_SECRET'])
 
         auth.request_token = {
             'oauth_token': request.args.get('oauth_token'),
