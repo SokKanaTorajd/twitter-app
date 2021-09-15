@@ -1,6 +1,15 @@
 # Python
 .env
-__pycache__/
+**/__pycache__/
+/__pycache__/
+*.pyc
 
 # Visual Studio Code
 .vscode
+
+*.log
+twitter-data-2.txt
+twitter-data.txt
+keywords.txt
+crawlers
+config
