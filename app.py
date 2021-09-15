@@ -64,7 +64,7 @@ def hello():
     return render_template('index.html')
 
 
-@app.route('/app2/start', methods=['POST'])
+@app.route('/app2/start', methods=['POST', 'GET'])
 def start_app2():
     if request.method =='POST':
         access_token = request.form['access_token']
@@ -73,7 +73,7 @@ def start_app2():
         
         return jsonify(user_info)
         
-    else:
+    if request.method == 'GET':
         callback_url = 'https://kecilin-twitter.herokuapp.com/app2/callback'
         auth = tweepy.OAuthHandler(
                         app.config['tweetdecks2_consumer_key'], 
@@ -87,7 +87,7 @@ def start_app2():
             print('Error! Failed to get request token.')
 
 
-@app.route('/app3/start', methods=['POST'])
+@app.route('/app3/start', methods=['POST', 'GET'])
 def start_app3():
     if request.method =='POST':
         access_token = request.form['access_token']
@@ -96,7 +96,7 @@ def start_app3():
         
         return jsonify(user_info)
         
-    else:
+    if request.method == 'GET':
         callback_url = 'https://kecilin-twitter.herokuapp.com/app3/callback'
         auth = tweepy.OAuthHandler(
                         app.config['tweetdecks3_consumer_key'], 
