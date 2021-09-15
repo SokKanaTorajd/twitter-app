@@ -76,8 +76,8 @@ def start_app2():
     if request.method == 'GET':
         callback_url = 'https://kecilin-twitter.herokuapp.com/app2/callback'
         auth = tweepy.OAuthHandler(
-                        app.config['tweetdecks2_consumer_key'], 
-                        app.config['tweetdecks2_consumer_secret'],  
+                        app.config['APP2_CONSUMER_KEY'], 
+                        app.config['APP2_CONSUMER_SECRET'],  
                         callback_url)
         try:
             url = auth.get_authorization_url()
@@ -99,8 +99,8 @@ def start_app3():
     if request.method == 'GET':
         callback_url = 'https://kecilin-twitter.herokuapp.com/app3/callback'
         auth = tweepy.OAuthHandler(
-                        app.config['tweetdecks3_consumer_key'], 
-                        app.config['tweetdecks3_consumer_key'],  
+                        app.config['APP3_CONSUMER_KEY'], 
+                        app.config['APP3_CONSUMER_SECRET'],  
                         callback_url)
         try:
             url = auth.get_authorization_url()
