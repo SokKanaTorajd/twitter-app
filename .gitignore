@@ -1,8 +1,9 @@
 # Python
 .env
 **/__pycache__/
-/__pycache__/
+__pycache__
 *.pyc
+crawlers
 
 # Visual Studio Code
 .vscode
