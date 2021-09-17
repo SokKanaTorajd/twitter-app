@@ -1,282 +1,189 @@
+import json
 from flask import Flask, flash, render_template, request, \
     url_for, redirect, jsonify
 from models.twitter import KecilinTwitter
-
-# from database.db import DB
-# from flask_restplus import Api, Resource, fields
+from database.db import DB
 import tweepy
+import config
 
 app = Flask(__name__)
 app.debug = False
-# app_api = Api(app, version='1.0', title='Integrated Media - Twitter API',
-#     description='Kecilin Integrated Media API v1.0')
 
-# twitter_user = api.namespace('user', description='Socmed Twitter API')
-# user_model = twitter_user.model('IMTwitter', {
-#     'user_id' : fields.String(required=True, description='User id'),
-#     'screen_name' : fields.String(required=True, description='Twitter Username'),
-#     'name' : fields.String(required=True, description='Twitter name'),
-#     'description' : fields.String(required=True, description='User bio description'),
-#     'statuses_count' : fields.Integer(required=True, description='User Statuses Count'),
-#     'friends_count' : fields.Integer(required=True, description='User Followings Count'),
-#     'followers_count' : fields.Integer(required=True, description='User Followers Count'),
-#     'favourites_count': fields.Integer(required=True, description='User Likes Count'),
-#     'profile_image' : fields.String(required=True, description='User profile image link')
-# }) 
+# request_token_url = 'https://api.twitter.com/oauth/request_token'
+# access_token_url = 'https://api.twitter.com/oauth/access_token'
+# authorize_url = 'https://api.twitter.com/oauth/authorize'
+# show_user_url = 'https://api.twitter.com/1.1/users/show.json'
+# app.config.from_pyfile('config.cfg', silent=True)
 
-# users = [
-#     {
-#         'user_id': '1117409047261540353', 
-#         'screen_name': 'radiputra49', 
-#         'name': 'radiputra49', 
-#         'description': 'Just for fun', 
-#         'statuses_count': 14, 
-#         'friends_count': 7, 
-#         'followers_count': 0, 
-#         'favourites_count': 3, 
-#         'profile_image': 'http://abs.twimg.com/sticky/default_profile_images/default_profile_normal.png'
-#     },
-#     {
-#         'user_id': '2880366295', 
-#         'screen_name': 'devtorajd', 
-#         'name': 'helios', 
-#         'description': 
-#         'Master of None - Jack of All Trades', 
-#         'statuses_count': 5413, 
-#         'friends_count': 235, 
-#         'followers_count': 151, 
-#         'favourites_count': 6599, 
-#         'profile_image': 'http://pbs.twimg.com/profile_images/1377249145316990982/ECR_CkiK_normal.jpg'
-#         }]
-
-request_token_url = 'https://api.twitter.com/oauth/request_token'
-access_token_url = 'https://api.twitter.com/oauth/access_token'
-authorize_url = 'https://api.twitter.com/oauth/authorize'
-show_user_url = 'https://api.twitter.com/1.1/users/show.json'
-
-app.config.from_pyfile('config.cfg', silent=True)
-
-# db = DB()
 twit = KecilinTwitter()
+mongo = DB('kecilin-twitter')
 
 @app.route('/')
 def hello():
     return render_template('index.html')
 
-
-@app.route('/app2/start', methods=['POST', 'GET'])
-def start_app2():
-    if request.method =='POST':
-        access_token = request.form['access_token']
-        access_token_secret = request.form['access_token_secret']
-        user_info = twit.get_user_info(access_token, access_token_secret)
-        
-        return jsonify(user_info)
-        
-    if request.method == 'GET':
-        callback_url = 'https://kecilin-twitter.herokuapp.com/app2/callback'
-        auth = tweepy.OAuthHandler(
-                        app.config['APP2_CONSUMER_KEY'], 
-                        app.config['APP2_CONSUMER_SECRET'],  
-                        callback_url)
-        try:
-            url = auth.get_authorization_url()
-            print(url)
-            return redirect(url)
-        except tweepy.TweepError:
-            print('Error! Failed to get request token.')
-
-
-@app.route('/app3/start', methods=['POST', 'GET'])
-def start_app3():
-    if request.method =='POST':
-        access_token = request.form['access_token']
-        access_token_secret = request.form['access_token_secret']
-        user_info = twit.get_user_info(access_token, access_token_secret)
-        
-        return jsonify(user_info)
-        
-    if request.method == 'GET':
-        callback_url = 'https://kecilin-twitter.herokuapp.com/app3/callback'
-        auth = tweepy.OAuthHandler(
-                        app.config['APP3_CONSUMER_KEY'], 
-                        app.config['APP3_CONSUMER_SECRET'],  
-                        callback_url)
-        try:
-            url = auth.get_authorization_url()
-            print(url)
-            return redirect(url)
-        except tweepy.TweepError:
-            print('Error! Failed to get request token.')
-
-
-# @app.route('/callback', methods=['GET'])
-# def callback():
-#     if request.method == 'GET':
-#         auth = tweepy.OAuthHandler(
-#                 app.config['APP_CONSUMER_KEY'],
-#                 app.config['APP_CONSUMER_SECRET'])
-
-#         auth.request_token = {
-#             'oauth_token': request.args.get('oauth_token'),
-#             'oauth_token_secret': request.args.get('oauth_verifier')}
-
-#         try:
-#             auth.get_access_token(request.args.get('oauth_verifier'))
-
-#         except tweepy.TweepError as e:
-#             error_message = 'Invalid response, {message}'.format(message=e)
-#             return render_template('error.html', error_message=error_message)
-
-#         auth.set_access_token(auth.access_token, auth.access_token_secret)
-#         api = tweepy.API(auth)
-#         user_verified = api.verify_credentials()
-
-#         if user_verified:
-
-#             user_info = {
-#                 'user_id' : user_verified.id_str,
-#                 'screen_name' : user_verified.screen_name,
-#                 'name' : user_verified.name,
-#                 'description' : user_verified.description,
-#                 'statuses_count' : user_verified.statuses_count,
-#                 'friends_count' : user_verified.friends_count,
-#                 'followers_count' : user_verified.followers_count,
-#                 'favourites_count': user_verified.favourites_count,
-#                 'profile_image' : user_verified.profile_image_url}
-
-#             return jsonify(user_info)
-
-#         return jsonify({"error": "access unauthorized"})
-
-
-@app.route('/app2/callback', methods=['GET'])
-def callback_app2():
-    if request.method == 'GET':
-        auth = tweepy.OAuthHandler(
-                app.config['APP2_CONSUMER_KEY'],
-                app.config['APP2_CONSUMER_SECRET'])
-
-        auth.request_token = {
-            'oauth_token': request.args.get('oauth_token'),
-            'oauth_token_secret': request.args.get('oauth_verifier')}
-
-        try:
-            auth.get_access_token(request.args.get('oauth_verifier'))
-
-        except tweepy.TweepError as e:
-            error_message = 'Invalid response, {message}'.format(message=e)
-            return render_template('error.html', error_message=error_message)
-
-        auth.set_access_token(auth.access_token, auth.access_token_secret)
-        api = tweepy.API(auth)
-        user_verified = api.verify_credentials()
-
-        if user_verified:
-
-            user_info = {
-                'user_id' : user_verified.id_str,
-                'screen_name' : user_verified.screen_name,
-                'name' : user_verified.name,
-                'description' : user_verified.description,
-                'statuses_count' : user_verified.statuses_count,
-                'friends_count' : user_verified.friends_count,
-                'followers_count' : user_verified.followers_count,
-                'favourites_count': user_verified.favourites_count,
-                'profile_image' : user_verified.profile_image_url}
-
-            return jsonify(user_info)
-
-        return jsonify({"error": "access unauthorized"})
-
-
-@app.route('/app3/callback', methods=['GET'])
-def callback_app3():
-    if request.method == 'GET':
-        auth = tweepy.OAuthHandler(
-                app.config['APP3_CONSUMER_KEY'],
-                app.config['APP3_CONSUMER_SECRET'])
-
-        auth.request_token = {
-            'oauth_token': request.args.get('oauth_token'),
-            'oauth_token_secret': request.args.get('oauth_verifier')}
-
-        try:
-            auth.get_access_token(request.args.get('oauth_verifier'))
-
-        except tweepy.TweepError as e:
-            error_message = 'Invalid response, {message}'.format(message=e)
-            return render_template('error.html', error_message=error_message)
-
-        auth.set_access_token(auth.access_token, auth.access_token_secret)
-        api = tweepy.API(auth)
-        user_verified = api.verify_credentials()
-
-        if user_verified:
-
-            user_info = {
-                'user_id' : user_verified.id_str,
-                'screen_name' : user_verified.screen_name,
-                'name' : user_verified.name,
-                'description' : user_verified.description,
-                'statuses_count' : user_verified.statuses_count,
-                'friends_count' : user_verified.friends_count,
-                'followers_count' : user_verified.followers_count,
-                'favourites_count': user_verified.favourites_count,
-                'profile_image' : user_verified.profile_image_url}
-
-            return jsonify(user_info)
-
-        return jsonify({"error": "access unauthorized"})
-
-
-# @twitter_user.route('/user-twitter')
-# class UserData(Resource):
-#     @twitter_user.doc('get_user_model')
-#     @twitter_user.marshal_with(user_model)
-#     def get(self):
-#         return users
-
-            # db.insertAuthorizedUser(data)
-
-            # return render_template('callback-success.html', 
-            #                         screen_name=screen_name, 
-            #                         user_id=user_id, name=name,
-            #                         friends_count=friends_count, 
-            #                         statuses_count=statuses_count, 
-            #                         followers_count=followers_count, 
-            #                         access_token_url=access_token_url)
-
-
-# @app.route('/post-tweet/', methods=['GET', 'POST'])
-# def post_tweet():
-
-#     if request.method == 'POST':
-#         user_access = db.getUserAccess(2880366295)
-#         auth = tweepy.OAuthHandler(
-#                 app.config['APP_CONSUMER_KEY'],
-#                 app.config['APP_CONSUMER_SECRET'])
-#         auth.set_access_token(user_access['token'], user_access['token_secret'])
-#         api = tweepy.API(auth)
-#         text = request.form['tweet']
-#         api.update_status(text)
-#         flash('Your Tweet has been posted! Check your timeline.')
-#         return redirect(url_for('post_tweet'))
-
-
 @app.route('/policy')
 def policy():
     return render_template('policy.html')
-
 
 @app.route('/tos')
 def tos():
     return render_template('tos.html')
 
-
 @app.errorhandler(500)
 def internal_server_error(e):
     return render_template('error.html', error_message='uncaught exception'), 500
+
+
+@app.route('/app2/start', methods=['POST', 'GET'])
+def start_app2():
+    if request.method =='POST':
+        app_id = request.form['app_id']
+        
+        if app_id == 2:
+            access_token = request.form['access_token']
+            access_token_secret = request.form['access_token_secret']     
+            user_info = twit.get_user_info(app_id, access_token, access_token_secret)
+            
+            return jsonify(user_info)
+        
+        if app_id != 2:
+            return jsonify({'error': 'use a correct application id.'})
+        
+    if request.method == 'GET':
+        callback_url = 'https://kecilin-twitter.herokuapp.com/app2/callback'
+        auth = tweepy.OAuthHandler(
+                        config.APP2_CONSUMER_KEY,
+                        config.APP2_CONSUMER_SECRET,  
+                        callback_url)
+        try:
+            url = auth.get_authorization_url()
+            # print(url)
+            return redirect(url)
+        except tweepy.TweepError:
+            print('Error! Failed to get request token.')
+            return jsonify({'error': 'Failed to request token.'})
+
+
+@app.route('/app3/start', methods=['POST', 'GET'])
+def start_app3():
+    if request.method =='POST':
+        app_id = request.form['app_id']
+        if app_id == 3:
+            access_token = request.form['access_token']
+            access_token_secret = request.form['access_token_secret']
+            user_info = twit.get_user_info(app_id, access_token, access_token_secret)
+            
+            return jsonify(user_info)
+        
+        if app_id != 3:
+            return jsonify({'error': 'use a correct application cluster.'})
+        
+    if request.method == 'GET':
+        callback_url = 'https://kecilin-twitter.herokuapp.com/app3/callback'
+        auth = tweepy.OAuthHandler(
+                        config.APP3_CONSUMER_KEY, 
+                        config.APP3_CONSUMER_SECRET,  
+                        callback_url)
+        try:
+            url = auth.get_authorization_url()
+            print(url)
+            return redirect(url)
+        except tweepy.TweepError:
+            print('Error! Failed to get request token.')
+
+
+@app.route('/app2/callback', methods=['GET'])
+def callback_app2():
+    if request.method == 'GET':
+        app_id = 2
+        auth = twit.set_oauth(app_id)
+
+        auth.request_token = {
+            'oauth_token': request.args.get('oauth_token'),
+            'oauth_token_secret': request.args.get('oauth_verifier')}
+
+        try:
+            auth.get_access_token(request.args.get('oauth_verifier'))
+
+        except tweepy.TweepError as e:
+            error_message = 'Invalid response, {message}'.format(message=e)
+            return render_template('error.html', error_message=error_message)
+
+        response = twit.get_user_info(app_id, 
+                                auth.access_token,
+                                auth.access_token_secret)
+        
+        if response['user_id']:
+            response['app_id'] = app_id
+            response['credentials'] = {'access_token': auth.access_token,
+                            'access_token_secret': auth.access_token_secret}
+            
+            return jsonify(response)
+        
+        return jsonify(response)
+
+@app.route('/app3/callback', methods=['GET'])
+def callback_app3():
+    if request.method == 'GET':
+        app_id = 3
+        auth = twit.set_oauth(app_id)
+
+        auth.request_token = {
+            'oauth_token': request.args.get('oauth_token'),
+            'oauth_token_secret': request.args.get('oauth_verifier')}
+
+        try:
+            auth.get_access_token(request.args.get('oauth_verifier'))
+
+        except tweepy.TweepError as e:
+            error_message = 'Invalid response, {message}'.format(message=e)
+            return render_template('error.html', error_message=error_message)
+
+        response = twit.get_user_info(app_id,
+                                    auth.access_token,
+                                    auth.access_token_secret)
+        
+        if response['user_id']:
+            response['app_id'] = app_id
+            response['credentials'] = {'access_token': auth.access_token,
+                            'access_token_secret': auth.access_token_secret}
+            
+            return jsonify(response)
+        
+        return jsonify(response)
+
+
+@app.route('/app2/tweet', methods=['POST'])
+def post_app2():
+    if request.method=='POST':
+        app_id = request.form['app_id']
+        status = request.form['status']
+        access_token = request.form['access_token']
+        access_token_secret = request.form['access_token_secret']
+        img = request.form['imgs']
+
+        tweeted = twit.post_tweet(app_id, access_token, 
+                                access_token_secret, 
+                                img=img, text=status)
+
+        return jsonify(tweeted)
+
+
+@app.route('/app3/tweet', methods=['POST'])
+def post_app3():
+    if request.method=='POST':
+        app_id = request.form['app_id']
+        status = request.form['status']
+        access_token = request.form['access_token']
+        access_token_secret = request.form['access_token_secret']
+        img = request.form['imgs']
+
+        tweeted = twit.post_tweet(app_id, access_token, 
+                                access_token_secret, 
+                                img=img, text=status)
+
+        return jsonify(tweeted)      
 
   
 if __name__ == '__main__':
