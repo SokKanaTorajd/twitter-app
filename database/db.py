@@ -1,25 +1,41 @@
 from pymongo import MongoClient
-import os
 
 class DB(object):
 
-    def __init__(self):
-        # self.client = MongoClient()
-        self.client = MongoClient(os.environ.get('MONGODB_URI'))
-        self.database = "kecilin-intern"
+    def __init__(self, db, URI=None):
+        
+        # Atlas Connection
+        if URI is not None:
+            self.client = MongoClient(URI)
+        
+        # localhost connection
+        if URI is None:
+            self.client = MongoClient()
 
-    def insertAuthorizedUser(self, data):
-        db = self.client[self.database]
-        collection = "twitter-app"
+        self.database = db
+    
+    def setDBConnection(self):
+        return self.client[self.database]
+
+    def checkExistedDoc(self, collection, key, value):
+        db = self.setDBConnection()
+        result = db[collection].find_one({key: value})
+        if result is None:
+            existed = False
+        else:
+            existed = True
+        return existed
+    
+    def updateDataByOne(self, collection, old_data, new_data):
+        db = self.setDBConnection()
+        return db[collection].update_one(old_data, new_data)
+
+    def insertDataByOne(self, collection, data):
+        db = self.setDBConnection()
         return db[collection].insert_one(data)
     
-    def getUserAccess(self, id):
-        db = self.client[self.database]
-        collection = "twitter-app"
-        result = db[collection].find_one({'user_id': id})
-        return result['access']
+    def getDataByOne(self, collection, key, value):
+        db = self.setDBConnection()
+        result = db[collection].find_one({key: value})
+        return result
 
-    def insertTweet(self, data):
-        db = self.client[self.database]
-        collection = "twitter-data"
-        return db[collection].insert_one(data)
