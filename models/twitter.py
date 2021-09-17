@@ -1,18 +1,31 @@
 import tweepy
-import requests
+import config
 
 class KecilinTwitter():
 
     def __init__(self):
-        self.consumer_key = 'qWS5juc0D6N9tHGl7uyVxHTRQ'
-        self.consumer_secret = 'vnyyMCnLiDHAg6qrCQUIMNimuqHR9KBINmq8zFqZSp1ni51CVJ'
+        # self.app1_consumer_key = config.APP1_CONSUMER_KEY
+        # self.app1_consumer_secret = config.APP1_CONSUMER_SECRET
+        self.app2_consumer_key = config.APP2_CONSUMER_KEY
+        self.app2_consumer_secret = config.APP2_CONSUMER_SECRET
+        self.app3_consumer_key = config.APP3_CONSUMER_KEY
+        self.app3_consumer_secret = config.APP3_CONSUMER_SECRET
 
-    def set_oauth(self):
-        auth = tweepy.OAuthHandler(self.consumer_key, self.consumer_secret)
-        return auth
+    def set_oauth(self, app_id:int):
+        # if app_id == 1:
+        #     auth = tweepy.OAuthHandler(self.app1_consumer_key, self.app1_consumer_secret)
+        #     return auth
 
-    def get_user_info(self, access_token, access_token_secret):
-        auth = self.set_oauth()
+        if app_id == 2:
+            auth = tweepy.OAuthHandler(self.app2_consumer_key, self.app2_consumer_secret)
+            return auth
+
+        if app_id == 3:
+            auth = tweepy.OAuthHandler(self.app3_consumer_key, self.app3_consumer_secret)
+            return auth
+
+    def get_user_info(self, app_id, access_token, access_token_secret):
+        auth = self.set_oauth(app_id)
         auth.set_access_token(access_token, access_token_secret)
         api = tweepy.API(auth)
 
@@ -34,4 +47,15 @@ class KecilinTwitter():
             error_msg = {"error": "access unauthorized"}
             return error_msg
         
-        
+    def post_tweet(self, app_id, access_token, access_token_secret, img:list, text:str):
+        auth = self.set_oauth(app_id, access_token, access_token_secret)
+        auth.set_access_token(access_token, access_token_secret)
+        api = tweepy.API(auth)
+        if img:
+            img_ids = []
+            for photo in img:
+                imgs = api.media_upload(photo)
+                img_ids.append(imgs.media_id)
+            return api.update_status(status=text, media_ids=img_ids)
+                
+        return api.update_status(status=text)
